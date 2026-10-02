@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staffing Team Command Center — Camp Fabletics 2026</title>
+
+<!-- Adobe Fonts kit: bzo8wcb (LTC Octic Gothic, weight 400 only) -->
+<link rel="stylesheet" href="https://use.typekit.net/bzo8wcb.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --olive:   #424226;
+  --spice:   #71242E;
+  --seagrass:#9C9A89;
+  --neon:    #E6E65E;
+  --sand:    #E8E4DA;
+  --shadow:  #1B1C19;
+  --line: rgba(66,66,38,0.18);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background: var(--sand);
+  font-family:'Barlow Semi Condensed','Helvetica Neue',Arial,sans-serif;
+  color: var(--shadow);
+}
+.display{
+  font-family:'ltc-octic-gothic','Oswald','Barlow Semi Condensed',Arial,sans-serif;
+  font-weight:400;
+  letter-spacing:0.02em;
+}
+
+.hero{
+  position:relative;
+  background-color: var(--olive);
+  background-image:
+    linear-gradient(180deg, rgba(27,28,25,0.55), rgba(27,28,25,0.78)),
+    url('assets/topo-olive.jpg');
+  background-size: cover;
+  background-position: center;
+  color:#fff;
+  padding: 30px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:16px;
+  overflow:hidden;
+}
+.hero-left{ display:flex; align-items:center; gap:16px; position:relative; z-index:1; flex-wrap:wrap; }
+.lockup{ height:30px; filter: brightness(0) invert(1); }
+.eyebrow{
+  text-transform:uppercase;
+  letter-spacing:0.14em;
+  font-size:11px;
+  color: var(--neon);
+  margin:0 0 6px;
+  font-weight:700;
+}
+h1{ font-size:30px; margin:0; color:#fff; }
+.volunteer-link{ font-size:12px; color:rgba(232,228,218,0.75); text-decoration:none; position:relative; z-index:1; border-bottom:1px solid rgba(232,228,218,0.3); padding-bottom:2px; white-space:nowrap; }
+.volunteer-link:hover{ color:#fff; border-color:#fff; }
+
+.tabs{
+  display:flex;
+  gap:2px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  padding:0 24px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.tab{
+  padding:14px 18px;
+  font-size:13px;
+  font-weight:700;
+  color:#8a8a80;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  text-transform:uppercase;
+  letter-spacing:0.03em;
+}
+.tab.active{ color: var(--olive); border-bottom-color: var(--spice); }
+
+.wrap{ max-width:1200px; margin:0 auto; padding:28px 24px 80px; }
+.view{ display:none; }
+.view.active{ display:block; }
+
+.stat-row{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:24px; }
+.stat{
+  background:#fff; border:1px solid var(--line); border-radius:6px;
+  padding:16px 20px; min-width:120px; flex:1;
+  border-top:3px solid var(--spice);
+}
+.stat .num{ font-size:32px; color: var(--olive); }
+.stat .lab{ font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#8a8a80; margin-top:2px; }
+
+.card{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:22px 24px; margin-bottom:18px; }
+.card h2{
+  font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--spice);
+  font-weight:700; margin:0 0 16px; padding-bottom:10px; border-bottom:1px solid var(--line);
+}
+
+/* Tables scroll horizontally on narrow screens instead of squashing columns */
+.table-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+table{ width:100%; border-collapse:collapse; font-size:13px; min-width:520px; }
+th{ text-align:left; padding:8px 10px; font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:#8a8a80; border-bottom:1px solid var(--line); }
+td{ padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+tr:hover td{ background:#faf8f3; }
+
+.filters{ display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+.filters input, .filters select{
+  padding:10px 12px; border:1px solid var(--line); border-radius:4px; font-size:14px; background:var(--sand);
+  font-family:'Barlow Semi Condensed',Arial,sans-serif;
+}
+.filters input{ flex:1; min-width:180px; }
+
+/* ---- Kanban / Pipeline board ---- */
+.kanban-hint{ font-size:12px; color:#8a8a80; margin:-6px 0 16px; }
+.kanban-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:10px; }
+.kanban-board{ display:flex; gap:12px; align-items:flex-start; min-width:max-content; }
+.kanban-col{
+  background:#fff; border:1px solid var(--line); border-radius:6px;
+  width:250px; flex:0 0 250px; display:flex; flex-direction:column;
+  max-height:66vh; scroll-snap-align:start;
+}
+.kanban-col-header{
+  padding:11px 14px; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
+  color: var(--olive); border-radius:6px 6px 0 0; background:#fff;
+}
+.kanban-col-count{ background:var(--sand); color:var(--olive); border-radius:12px; padding:1px 8px; font-size:11px; font-weight:700; }
+.kanban-list{ padding:10px; display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; min-height:64px; }
+.kanban-card{
+  background: var(--sand); border:1px solid var(--line); border-radius:4px;
+  padding:10px 12px; cursor:grab; font-size:13px; touch-action:none; user-select:none;
+}
+.kanban-card:active{ cursor:grabbing; }
+.kanban-card-dragging{ opacity:0.35; }
+.kanban-ghost{
+  position:fixed; pointer-events:none; z-index:9999;
+  opacity:0.96; box-shadow:0 10px 24px rgba(0,0,0,0.28);
+  transform: rotate(-1.5deg); border-radius:4px; margin:0;
+}
+.kanban-placeholder{
+  border:2px dashed var(--seagrass); border-radius:4px;
+  background: rgba(156,154,137,0.15); min-height:44px;
+}
+.kc-name{ font-weight:700; color:var(--olive); margin-bottom:2px; }
+.kc-dept{ font-size:11px; color:#6b6b62; }
+.kc-assign-tag{ display:inline-block; margin-top:7px; background:#fff; border:1px solid var(--line); border-radius:20px; padding:2px 9px; font-size:10px; color:var(--spice); font-weight:700; }
+.kanban-editor{ display:none; margin-top:9px; padding-top:9px; border-top:1px dashed var(--line); flex-direction:column; gap:6px; }
+.kanban-editor.open{ display:flex; }
+.kanban-editor input{
+  width:100%; padding:7px 8px; border:1px solid var(--line); border-radius:3px;
+  font-size:12px; font-family:inherit; background:#fff;
+}
+.kanban-editor .save-btn{ align-self:flex-start; }
+
+input.inline-text{
+  width:100%; padding:5px 8px; border:1px solid var(--line); border-radius:4px; font-size:12px; background:#fff;
+}
+button.save-btn{
+  background: var(--spice); color:#fff; border:none; padding:6px 12px; border-radius:4px;
+  font-size:11px; font-weight:700; text-transform:uppercase; cursor:pointer;
+}
+button.save-btn:hover{ background:#5a1c25; }
+button.save-btn.saved{ background: var(--seagrass); }
+
+.day-coverage{ margin-bottom:8px; }
+.opp-row{ display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--line); font-size:13px; }
+.opp-row:last-child{ border-bottom:none; }
+.opp-name{ flex:1; }
+.opp-count{ font-weight:700; color: var(--olive); min-width:40px; text-align:right; }
+
+.day-tabs{ display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+.day-tab{
+  padding:7px 14px; border:1px solid var(--line); border-radius:20px; font-size:12px; font-weight:700;
+  cursor:pointer; background:#fff; color:#6b6b62;
+}
+.day-tab.active{ background: var(--olive); color:#fff; border-color: var(--olive); }
+
+.loading-note{ font-size:13px; color:#8a8a80; padding:20px 0; }
+.tag{ display:inline-block; background:var(--sand); border:1px solid var(--line); border-radius:20px; padding:2px 8px; font-size:11px; margin:2px 3px 0 0; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-left">
+    <img class="lockup" src="assets/lockup.png" alt="Camp Fabletics">
+    <div>
+      <p class="eyebrow">Find True North · 2026 Retail Leadership Summit</p>
+      <h1 class="display">Volunteer Staffing Command Center</h1>
+    </div>
+  </div>
+  <a class="volunteer-link" href="https://fableticssummitvolunteer.netlify.app/">← Volunteer status page</a>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-view="overview">Overview</div>
+  <div class="tab" data-view="coverage">Coverage by Day</div>
+  <div class="tab" data-view="pipeline">Pipeline</div>
+  <div class="tab" data-view="breakfast">Breakfast Club</div>
+</div>
+
+<div class="wrap">
+  <div id="loadingNote" class="loading-note">Loading volunteer data...</div>
+
+  <div class="view active" id="view-overview">
+    <div class="stat-row" id="statRow"></div>
+    <div class="card">
+      <h2>All Volunteers</h2>
+      <div class="filters">
+        <input type="text" id="searchInput" placeholder="Search by name or department...">
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option value="New">New</option>
+          <option value="Under Review">Under Review</option>
+          <option value="Ready to Assign">Ready to Assign</option>
+          <option value="Assigned">Assigned</option>
+          <option value="Waitlist">Waitlist</option>
+          <option value="Unavailable">Unavailable</option>
+          <option value="Withdrawn">Withdrawn</option>
+        </select>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Department</th><th>Days Available</th><th>Status</th></tr>
+          </thead>
+          <tbody id="overviewTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-coverage">
+    <div class="day-tabs" id="dayTabs"></div>
+    <div class="card" id="coverageCard"></div>
+  </div>
+
+  <div class="view" id="view-pipeline">
+    <div class="card">
+      <h2>Manage Assignments</h2>
+      <div class="filters">
+        <input type="text" id="pipelineSearch" placeholder="Search by name or department...">
+      </div>
+      <p class="kanban-hint">Drag a card to a different column to change status. Tap a card to edit their assignment details.</p>
+      <div class="kanban-wrap">
+        <div class="kanban-board" id="kanbanBoard"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-breakfast">
+    <div class="card">
+      <h2>Breakfast Club Hosts</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Interest</th><th>Topic</th><th>Audience</th></tr>
+          </thead>
+          <tbody id="breakfastTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = [
+  { key: 'Oct 5', label: 'Monday, October 5 — Arrival Day' },
+  { key: 'Oct 6', label: 'Tuesday, October 6 — Brand and Business Updates' },
+  { key: 'Oct 7', label: 'Wednesday, October 7 — Business Acumen' },
+  { key: 'Oct 8', label: 'Thursday, October 8 — Learning and Development and Awards Night' }
+];
+
+const STATUS_OPTIONS = ['New', 'Under Review', 'Ready to Assign', 'Assigned', 'Waitlist', 'Unavailable', 'Withdrawn'];
+
+let allRecords = [];
+let activeDayIndex = 0;
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+// Both calls below hit our own serverless functions — the Airtable token
+// lives only in the Netlify environment variable, never in this file.
+
+async function fetchAllRecords() {
+  const res = await fetch('/.netlify/functions/list');
+  if (!res.ok) throw new Error(`List error ${res.status}`);
+  const data = await res.json();
+  return data.records || [];
+}
+
+async function updateRecord(recordId, fields) {
+  const res = await fetch('/.netlify/functions/update', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ recordId, fields })
+  });
+  if (!res.ok) throw new Error(`Update error ${res.status}`);
+  return res.json();
+}
+
+// ---------- Overview ----------
+function renderStats() {
+  const total = allRecords.length;
+  const byStatus = {};
+  STATUS_OPTIONS.forEach(s => byStatus[s] = 0);
+  allRecords.forEach(r => {
+    const s = r.fields['Response Status'] || 'New';
+    byStatus[s] = (byStatus[s] || 0) + 1;
+  });
+
+  const statRow = document.getElementById('statRow');
+  statRow.innerHTML = `
+    <div class="stat"><div class="num display">${total}</div><div class="lab">Total Volunteers</div></div>
+    <div class="stat"><div class="num display">${byStatus['Assigned'] || 0}</div><div class="lab">Assigned</div></div>
+    <div class="stat"><div class="num display">${byStatus['Ready to Assign'] || 0}</div><div class="lab">Ready to Assign</div></div>
+    <div class="stat"><div class="num display">${(byStatus['New'] || 0) + (byStatus['Under Review'] || 0)}</div><div class="lab">Awaiting Review</div></div>
+  `;
+}
+
+function renderOverviewTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const statusFilter = document.getElementById('statusFilter').value;
+  const tbody = document.getElementById('overviewTableBody');
+
+  const filtered = allRecords.filter(r => {
+    const f = r.fields;
+    const matchesSearch = !search ||
+      (f['Volunteer Name'] || '').toLowerCase().includes(search) ||
+      (f['Department / Team'] || '').toLowerCase().includes(search);
+    const matchesStatus = !statusFilter || (f['Response Status'] || 'New') === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  tbody.innerHTML = filtered.map(r => {
+    const f = r.fields;
+    const days = (f['Days Available'] || []).map(d => d.replace(/,.*/, '')).join(', ');
+    return `<tr>
+      <td>${escapeHtml(f['Volunteer Name'])}</td>
+      <td>${escapeHtml(f['Department / Team'])}</td>
+      <td>${escapeHtml(days)}</td>
+      <td>${escapeHtml(f['Response Status'] || 'New')}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="4" style="color:#8a8a80;">No volunteers match this filter.</td></tr>`;
+}
+
+// ---------- Coverage by Day ----------
+function renderDayTabs() {
+  const container = document.getElementById('dayTabs');
+  container.innerHTML = DAYS.map((d, i) =>
+    `<div class="day-tab ${i === activeDayIndex ? 'active' : ''}" data-index="${i}">${d.label.split(' — ')[0]}</div>`
+  ).join('');
+  container.querySelectorAll('.day-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      activeDayIndex = parseInt(tab.dataset.index, 10);
+      renderDayTabs();
+      renderCoverage();
+    });
+  });
+}
+
+function renderCoverage() {
+  const day = DAYS[activeDayIndex];
+  const oppField = `${day.key} Support Opportunities`;
+  const counts = {};
+
+  allRecords.forEach(r => {
+    const opps = r.fields[oppField] || [];
+    opps.forEach(o => { counts[o] = (counts[o] || 0) + 1; });
+  });
+
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const card = document.getElementById('coverageCard');
+  card.innerHTML = `<h2>${day.label}</h2>` +
+    (sorted.length === 0
+      ? `<p style="color:#8a8a80; font-size:13px;">No signups yet for this day.</p>`
+      : sorted.map(([name, count]) =>
+          `<div class="opp-row"><span class="opp-name">${escapeHtml(name)}</span><span class="opp-count">${count}</span></div>`
+        ).join('')
+    );
+}
+
+// ---------- Pipeline (Kanban board, custom drag — no external library) ----------
+const STATUS_ACCENT = {
+  'New': '#9C9A89',
+  'Under Review': '#E6E65E',
+  'Ready to Assign': '#9C9A89',
+  'Assigned': '#71242E',
+  'Waitlist': '#a3323b',
+  'Unavailable': '#c9c9c2',
+  'Withdrawn': '#c9c9c2'
+};
+
+function kanbanCard(r) {
+  const f = r.fields;
+  return `
+    <div class="kanban-card" data-record-id="${r.id}">
+      <div class="kc-name">${escapeHtml(f['Volunteer Name'])}</div>
+      <div class="kc-dept">${escapeHtml(f['Department / Team'] || '')}</div>
+      ${f['Confirmed Assignment'] ? `<span class="kc-assign-tag">${escapeHtml(f['Confirmed Assignment'])}</span>` : ''}
+      <div class="kanban-editor">
+        <input class="inline-text" data-field="Confirmed Assignment" placeholder="Confirmed assignment" value="${escapeHtml(f['Confirmed Assignment'] || '')}">
+        <input class="inline-text" data-field="Confirmed Shift Time" placeholder="Shift time" value="${escapeHtml(f['Confirmed Shift Time'] || '')}">
+        <input class="inline-text" data-field="Assignment Details" placeholder="Where to report, who to check in with..." value="${escapeHtml(f['Assignment Details'] || '')}">
+        <button class="save-btn kanban-save-btn" type="button">Save</button>
+      </div>
+    </div>`;
+}
+
+function refreshColumnCounts() {
+  document.querySelectorAll('.kanban-col').forEach(col => {
+    const list = col.querySelector('.kanban-list');
+    const countEl = col.querySelector('.kanban-col-count');
+    if (list && countEl) countEl.textContent = list.querySelectorAll('.kanban-card').length;
+  });
+}
+
+function renderPipeline() {
+  const search = document.getElementById('pipelineSearch').value.toLowerCase();
+  const board = document.getElementById('kanbanBoard');
+
+  const filtered = allRecords.filter(r => {
+    const f = r.fields;
+    return !search ||
+      (f['Volunteer Name'] || '').toLowerCase().includes(search) ||
+      (f['Department / Team'] || '').toLowerCase().includes(search);
+  });
+
+  board.innerHTML = STATUS_OPTIONS.map(status => {
+    const cards = filtered.filter(r => (r.fields['Response Status'] || 'New') === status);
+    return `
+      <div class="kanban-col">
+        <div class="kanban-col-header" style="border-top:3px solid ${STATUS_ACCENT[status]}">
+          <span>${status}</span>
+          <span class="kanban-col-count">${cards.length}</span>
+        </div>
+        <div class="kanban-list" data-status="${status}">
+          ${cards.map(kanbanCard).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
+  board.querySelectorAll('.kanban-card').forEach(initCardDrag);
+
+  board.querySelectorAll('.kanban-save-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.kanban-card');
+      const recordId = card.dataset.recordId;
+      const fields = {};
+      card.querySelectorAll('[data-field]').forEach(el => { fields[el.dataset.field] = el.value; });
+      const originalLabel = btn.textContent;
+      btn.textContent = 'Saving...';
+      try {
+        await updateRecord(recordId, fields);
+        const rec = allRecords.find(r => r.id === recordId);
+        if (rec) Object.assign(rec.fields, fields);
+        const tagHost = card.querySelector('.kc-assign-tag');
+        if (fields['Confirmed Assignment'] && !tagHost) {
+          card.querySelector('.kc-dept').insertAdjacentHTML('afterend', `<span class="kc-assign-tag">${escapeHtml(fields['Confirmed Assignment'])}</span>`);
+        } else if (tagHost) {
+          tagHost.textContent = fields['Confirmed Assignment'] || '';
+        }
+        btn.textContent = 'Saved';
+        setTimeout(() => { btn.textContent = originalLabel; }, 1200);
+      } catch (err) {
+        console.error(err);
+        btn.textContent = 'Error — retry';
+      }
+    });
+  });
+}
+
+// ---- Drag engine: Pointer Events cover mouse + touch + pen in one code path ----
+let dragState = null;
+
+function initCardDrag(card) {
+  card.addEventListener('pointerdown', onCardPointerDown);
+}
+
+function onCardPointerDown(e) {
+  if (e.target.closest('input') || e.target.closest('button')) return;
+  if (e.button !== undefined && e.button !== 0) return;
+
+  const card = e.currentTarget;
+  const rect = card.getBoundingClientRect();
+  dragState = {
+    card,
+    startX: e.clientX,
+    startY: e.clientY,
+    offsetX: e.clientX - rect.left,
+    offsetY: e.clientY - rect.top,
+    width: rect.width,
+    moved: false,
+    ghost: null,
+    placeholder: null,
+    originList: card.parentElement
+  };
+
+  window.addEventListener('pointermove', onCardPointerMove);
+  window.addEventListener('pointerup', onCardPointerUp, { once: true });
+}
+
+function onCardPointerMove(e) {
+  if (!dragState) return;
+  const dx = e.clientX - dragState.startX;
+  const dy = e.clientY - dragState.startY;
+
+  if (!dragState.moved) {
+    if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+    dragState.moved = true;
+    beginDragVisuals();
+  }
+
+  moveGhost(e.clientX, e.clientY);
+  updatePlaceholderPosition(e.clientX, e.clientY);
+  autoScrollKanban(e.clientX);
+}
+
+function beginDragVisuals() {
+  const { card } = dragState;
+  const rect = card.getBoundingClientRect();
+
+  const ghost = card.cloneNode(true);
+  ghost.classList.add('kanban-ghost');
+  const ghostEditor = ghost.querySelector('.kanban-editor');
+  if (ghostEditor) ghostEditor.remove();
+  ghost.style.width = rect.width + 'px';
+  ghost.style.left = rect.left + 'px';
+  ghost.style.top = rect.top + 'px';
+  document.body.appendChild(ghost);
+  dragState.ghost = ghost;
+
+  const placeholder = document.createElement('div');
+  placeholder.className = 'kanban-placeholder';
+  placeholder.style.height = rect.height + 'px';
+  dragState.placeholder = placeholder;
+  card.parentElement.insertBefore(placeholder, card);
+
+  card.classList.add('kanban-card-dragging');
+  card.style.display = 'none';
+}
+
+function moveGhost(clientX, clientY) {
+  const { ghost, offsetX, offsetY } = dragState;
+  if (!ghost) return;
+  ghost.style.left = (clientX - offsetX) + 'px';
+  ghost.style.top = (clientY - offsetY) + 'px';
+}
+
+function updatePlaceholderPosition(clientX, clientY) {
+  const list = findListUnderPoint(clientX, clientY);
+  if (!list) return;
+  const placeholder = dragState.placeholder;
+  const cards = Array.from(list.querySelectorAll('.kanban-card')).filter(c => c !== dragState.card);
+
+  let inserted = false;
+  for (const c of cards) {
+    const r = c.getBoundingClientRect();
+    if (clientY < r.top + r.height / 2) {
+      list.insertBefore(placeholder, c);
+      inserted = true;
+      break;
+    }
+  }
+  if (!inserted) list.appendChild(placeholder);
+}
+
+function findListUnderPoint(x, y) {
+  const els = document.elementsFromPoint(x, y);
+  return els.find(el => el.classList && el.classList.contains('kanban-list')) || null;
+}
+
+function autoScrollKanban(clientX) {
+  const wrap = document.querySelector('.kanban-wrap');
+  if (!wrap) return;
+  const rect = wrap.getBoundingClientRect();
+  const margin = 44;
+  if (clientX < rect.left + margin) wrap.scrollLeft -= 14;
+  else if (clientX > rect.right - margin) wrap.scrollLeft += 14;
+}
+
+async function onCardPointerUp(e) {
+  window.removeEventListener('pointermove', onCardPointerMove);
+  if (!dragState) return;
+  const { card, moved, placeholder, ghost, originList } = dragState;
+
+  if (!moved) {
+    card.querySelector('.kanban-editor').classList.toggle('open');
+    dragState = null;
+    return;
+  }
+
+  const newList = placeholder ? placeholder.parentElement : originList;
+  const newStatus = newList.dataset.status;
+  const oldStatus = originList.dataset.status;
+
+  if (placeholder) {
+    placeholder.parentElement.insertBefore(card, placeholder);
+    placeholder.remove();
+  }
+  card.style.display = '';
+  card.classList.remove('kanban-card-dragging');
+  if (ghost) ghost.remove();
+
+  refreshColumnCounts();
+
+  if (newStatus !== oldStatus) {
+    const recordId = card.dataset.recordId;
+    const rec = allRecords.find(r => r.id === recordId);
+    const prevStatus = rec ? (rec.fields['Response Status'] || 'New') : oldStatus;
+    if (rec) rec.fields['Response Status'] = newStatus;
+    renderStats();
+    try {
+      await updateRecord(recordId, { 'Response Status': newStatus });
+    } catch (err) {
+      console.error(err);
+      if (rec) rec.fields['Response Status'] = prevStatus;
+      renderStats();
+      renderPipeline();
+      alert('Could not save that move. Reverted — check your connection and try again.');
+    }
+  }
+
+  dragState = null;
+}
+
+// ---------- Breakfast Club ----------
+function renderBreakfast() {
+  const tbody = document.getElementById('breakfastTableBody');
+  const hosts = allRecords.filter(r => {
+    const interest = r.fields['Breakfast Club Hosting Interest'];
+    return interest === 'Yes' || interest === 'Maybe, with more information';
+  });
+
+  tbody.innerHTML = hosts.map(r => {
+    const f = r.fields;
+    const audience = (f['Breakfast Club Audience'] || []).map(a => `<span class="tag">${escapeHtml(a)}</span>`).join('');
+    return `<tr>
+      <td>${escapeHtml(f['Volunteer Name'])}</td>
+      <td>${escapeHtml(f['Breakfast Club Hosting Interest'])}</td>
+      <td>${escapeHtml(f['Breakfast Club Topic'] || '—')}</td>
+      <td>${audience || '—'}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="4" style="color:#8a8a80;">No one has signed up to host yet.</td></tr>`;
+}
+
+// ---------- Tabs ----------
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(`view-${tab.dataset.view}`).classList.add('active');
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', renderOverviewTable);
+document.getElementById('statusFilter').addEventListener('change', renderOverviewTable);
+document.getElementById('pipelineSearch').addEventListener('input', renderPipeline);
+
+// ---------- Init ----------
+async function init() {
+  try {
+    allRecords = await fetchAllRecords();
+    document.getElementById('loadingNote').style.display = 'none';
+    renderStats();
+    renderOverviewTable();
+    renderDayTabs();
+    renderCoverage();
+    renderPipeline();
+    renderBreakfast();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('loadingNote').textContent = 'Could not load volunteer data. Check that AIRTABLE_TOKEN is set in Site configuration -> Environment variables.';
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
